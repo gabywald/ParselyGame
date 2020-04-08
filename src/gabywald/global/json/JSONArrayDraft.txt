@@ -1,0 +1,27 @@
+	/**
+	 * Construct a JSONArray from a Collection.
+	 * @param collection (Collection&lt;Object&gt;) A Collection.
+	 */
+	public JSONArray(Collection<Object> collection) {
+		this();
+		this.values = new ArrayList<JSONValue>();
+		if (collection != null) {
+			Iterator<Object> iter = collection.iterator();
+			while (iter.hasNext()) 
+				{ this.values.add(JSONTokenizer.wrap(iter.next())); }
+		} // END "if (collection != null)"
+	}
+	
+	/**
+	 * Construct a JSONArray from an array. 
+	 * @throws JSONException If not an array.
+	 */
+	public JSONArray(Object array) throws JSONException {
+		this();
+		if (array.getClass().isArray()) {
+			int length = Array.getLength(array);
+			for (int i = 0 ; i < length ; i++) 
+				{ this.put(JSONObject.wrap(Array.get(array, i))); }
+		} else 
+			{ throw new JSONException( "JSONArray initial value should be a string or collection or array." ); }
+	}

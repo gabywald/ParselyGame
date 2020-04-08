@@ -1,0 +1,82 @@
+
+
+
+	/**
+	 * Construct a JSONObject from a Map.
+	 * @param map (...) A map object that can be used to initialize the contents of the JSONObject.
+	 * @throws JSONException
+	 */
+	public JSONObject(Map<String, Object> map) {
+		this();
+		this.map = new HashMap<String, JSONValue>();
+		if (map != null) {
+			Iterator<Entry<String, Object>> i = map.entrySet().iterator();
+			while (i.hasNext()) {
+				Entry<String, Object> entry = i.next();
+				Object value = entry.getValue();
+				if (value != null) 
+					{ this.map.put(entry.getKey(), JSONTokenizer.wrap(value)); }
+			} // END "while (i.hasNext())"
+		} // END "if (map != null)"
+	}
+
+	/**
+	 * Construct a JSONObject from an Object using bean getters. It reflects on
+	 * all of the public methods of the object. For each of the methods with no
+	 * parameters and a name starting with <code>"get"</code> or
+	 * <code>"is"</code> followed by an uppercase letter, the method is invoked,
+	 * and a key and the value returned from the getter method are put into the
+	 * new JSONObject.
+	 *
+	 * The key is formed by removing the <code>"get"</code> or <code>"is"</code>
+	 * prefix. If the second remaining character is not upper case, then the
+	 * first character is converted to lower case.
+	 *
+	 * For example, if an object has a method named <code>"getName"</code>, and
+	 * if the result of calling <code>object.getName()</code> is
+	 * <code>"Larry Fine"</code>, then the JSONObject will contain
+	 * <code>"name": "Larry Fine"</code>.
+	 *
+	 * @param bean (Object) An object that has getter methods that should be used to make a JSONObject.
+	 */
+	public JSONObject(Object bean) {
+		this();
+		this.populateMap(bean);
+	}
+
+	private void populateMap(Object bean) {
+		Class klass = bean.getClass();
+		// If klass is a System class then set includeSuperClass to false.
+		boolean includeSuperClass = klass.getClassLoader() != null;
+		Method[] methods = includeSuperClass ? klass.getMethods() : klass
+				.getDeclaredMethods();
+		for (int i = 0 ; i < methods.length ; i++) {
+			try {
+				Method method = methods[i];
+				if (Modifier.isPublic(method.getModifiers())) {
+					String name = method.getName();
+					String key = "";
+					if (name.startsWith("get")) {
+						if ("getClass".equals(name)
+								|| "getDeclaringClass".equals(name)) 
+						{ key = ""; } 
+						else 
+						{ key = name.substring(3); }
+					} else if (name.startsWith("is")) 
+					{ key = name.substring(2); }
+					if (key.length() > 0
+							&& Character.isUpperCase(key.charAt(0))
+							&& method.getParameterTypes().length == 0) {
+						if (key.length() == 1) 
+						{ key = key.toLowerCase(); } 
+						else if (!Character.isUpperCase(key.charAt(1))) {
+							key = key.substring(0, 1).toLowerCase() + key.substring(1);
+						}
+						Object result = method.invoke(bean, (Object[]) null);
+						if (result != null) 
+						{ this.map.put(key, JSONTokenizer.wrap(result)); }
+					}
+				}
+			} catch (Exception ignore) { ; }
+		}
+	}

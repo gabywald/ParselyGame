@@ -1,0 +1,16 @@
+name	Basic Scenario for Parsely Game
+introduction	Welcome to the BSPG !
+silly	'XXXXX' is wrong !;Baaaaad !;Stop shitting at me !;I do not know how to do 'XXXXX'...
+location	0	Starting Location
+description	0	You are at Starting location. 
+exits	0	West/1
+objects	0	pen
+location	1	Middle location
+description	1	You are at Middle location. 
+exits	1	East/0;West/2
+objects	1	note;fishpole;troll;princess
+location	2	End location
+description	2	You are at End location	WINIF[INVENTORY:note;pen]
+exits	2	East/1
+howtowin	2	WINIF[INVENTORY:note;pen]
+msgwhenwin	2	You finished this game. Congratulations !
