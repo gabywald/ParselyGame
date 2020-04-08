@@ -1,8 +1,10 @@
 # Parsely Game
 
-Some idea to do a "rétro 1980's" textutal video game inspired from "Parsely Game (see credits below and in [resources/1506997968929.pdf] ), a basic scenario is present. 
+Some idea to do a "rétro 1980's" textual video game inspired from "Parsely Game (see credits below and in [resources/1506997968929.pdf] ), a basic scenario is present. 
 
-One of the idea was to make a distant server to play. 
+One of the idea was to make a distant server to play (i.e. some socket implementation available), REST could be an idea too !
+
+It could be a start for a MOO (Multi-User-Dungeon Object-Oriented) with multiple users on same play !
 
 Feel Free ("Open Code") to do a better game and gives Advices and / or Improvements. 
 
