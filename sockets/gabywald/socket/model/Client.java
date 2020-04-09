@@ -1,7 +1,5 @@
 package gabywald.socket.model;
 
-// import gabywald.socket.controller.Keyboard;
-// import gabywald.socket.view.FrameClient;
 import gabywald.global.json.JSONException;
 import gabywald.global.json.JSONObject;
 import gabywald.utilities.logger.Logger;
@@ -14,27 +12,24 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.util.Observable;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * 
- * @author Gabriel Chandesris (2013, 2015)
+ * @author Gabriel Chandesris (2013, 2015, 2020)
  */
 public class Client extends Observable implements Runnable {
 	private String hostname;
 	private int port;
-//	private InputStream sis;
-//	private OutputStream sos;
-	/** private BufferedReader br; */
-	private String inn;
+	private ConcurrentLinkedQueue<String> inn;
 	private JSONObject out;
 	
 	private Socket socket;
 	
 	public Client(String host, int atta) {
-		// this.addObserver(Keyboard.getInstance());
 		this.hostname	= host;
 		this.port		= atta;
-		this.inn		= new String("");
+		this.inn		= new ConcurrentLinkedQueue<String>();
 		this.out		= new JSONObject();
 		this.socket		= new Socket();
 		/** this.br		= new BufferedReader(new InputStreamReader(System.in)); */
@@ -46,12 +41,18 @@ public class Client extends Observable implements Runnable {
 	}
 	
 	private void changeAndNotify(JSONObject output) {
+		
+		Logger.printlnLog(LoggerLevel.LL_INFO, "CLIENT RECEIVE (2): ///" + output + "///");
+		
 		this.out = output;
 		this.setChanged();
 		this.notifyObservers();
 	}
 	
 	private void changeAndNotify(String output) {
+		
+		Logger.printlnLog(LoggerLevel.LL_INFO, "CLIENT RECEIVE (1): ///" + output + "///");
+		
 		JSONObject tmpJSONobj;
 		try {
 			tmpJSONobj = new JSONObject( output );
@@ -68,8 +69,10 @@ public class Client extends Observable implements Runnable {
 		catch (IOException e) { e.printStackTrace(); }
 	}
 	
-	public void input(String txt)	
-		{ this.inn = txt; }
+	public void input(String txt) {
+		this.inn.add(txt);
+		Logger.printlnLog(LoggerLevel.LL_INFO, txt + " => " + this.inn.peek());
+	}
 	
 	public String getOutput() { 
 		this.out.put("src", "[" + this.hostname + ":" + this.port + "]");
@@ -108,7 +111,7 @@ public class Client extends Observable implements Runnable {
 	}
 	
 	public void stop() {
-		this.inn = "exit";
+		this.inn.add("exit");
 	}
 	
 	public void run() {
@@ -121,18 +124,26 @@ public class Client extends Observable implements Runnable {
 			byte[] readbuffer		= null;
 			boolean exit			= false;
 			do {
-				if (!this.inn.equals("")) {
-					// FrameClient.getInstance().addLineToConsole("send '"+this.inn+"'");
-					sos.write(this.inn.getBytes());
+				
+				Logger.printlnLog(LoggerLevel.LL_INFO, this.inn.size() + "*");
+				
+				while ( (this.inn == null) || (this.inn.size() == 0) ) 
+					{ ; }
+				if ( (this.inn != null) && (this.inn.size() != 0) ) {
+					
+					String data = this.inn.poll();
+					
+					Logger.printlnLog(LoggerLevel.LL_INFO, "data: ---" + data + "---");
+					
+					sos.write(data.getBytes());
 					int available	= sis.available();
 					while (available == 0)
 						{ available = sis.available(); }
 					readbuffer		= new byte[available];
 					sis.read(readbuffer);
 					this.changeAndNotify(new String(readbuffer));
-					exit = ("quit".equalsIgnoreCase(this.inn) 
-							|| "shutdown".equalsIgnoreCase(this.inn));
-					this.inn = new String("");
+					exit = ("quit".equalsIgnoreCase(data) 
+							|| "shutdown".equalsIgnoreCase(data));
 				} // END "if (!this.inn.equals(""))"
 			} while ( ! exit );
 			this.socket.close();
