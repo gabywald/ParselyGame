@@ -3,7 +3,6 @@ package gabywald.socket.parsely.v2;
 import java.io.BufferedReader;
 
 import gabywald.global.json.JSONObject;
-import gabywald.socket.model.ClientObserver;
 import gabywald.utilities.logger.Logger;
 import gabywald.utilities.logger.Logger.LoggerLevel;
 
@@ -12,7 +11,9 @@ import java.io.IOException;
 
 public class ParselyGame {
 	
-	private ClientParsely client = null;
+	private ClientParsely client	= null;
+	
+	private boolean exit			= false;
 
 	public ParselyGame(String host, Integer port) {
 		
@@ -22,15 +23,18 @@ public class ParselyGame {
 		Logger.printlnLog(LoggerLevel.LL_DEBUG, dp.getOutput());
 		
 		// ***** Client Part !!
-		ClientParsely cp	= new ClientParsely(host, port);
-		ClientObserver co	= new ClientObserver();
+		ClientParsely cp			= new ClientParsely(host, port);
+		ClientParselyObserver co	= new ClientParselyObserver();
 		cp.addObserver(co);
 		cp.start();
 		
 		this.client = cp;
 		
-//		cp.input("commande1");
+//		cp.input("{ \"query\" : \"commande1\" }");
 //		this.client.input("commande2");
+//		JSONObject toSend = new JSONObject();
+//		toSend.put("query", "commande3");
+//		this.client.input( toSend.toJSON() );
 
 	}
 	
@@ -39,7 +43,7 @@ public class ParselyGame {
 //		String toShow				= instance.getContentToShow();
 //		Logger.printlnLog(LoggerLevel.LL_FORUSER, toShow);
 		
-		boolean exit = false;
+		// boolean exit = false;
 		do {
 //			JSONObject jsonObj = new JSONObject();
 //			try {
@@ -68,7 +72,7 @@ public class ParselyGame {
 				
 				// exit = (readedLine.equals("quit") || readedLine.equals("shutdown"));
 			}
-		} while( ! exit);
+		} while( ! this.exit);
 		Logger.printlnLog(LoggerLevel.LL_FORUSER, "Good bye !");
 	}
 	

@@ -59,7 +59,7 @@ public class DCTParsely extends DaemonGenericClientThread {
 				this.inn		= new String(readBuffer);
 				
 				// ***** ***** ***** ***** ***** 
-				Logger.printlnLog(LoggerLevel.LL_INFO, "this.inn: //*" + this.inn + "*//");
+				Logger.printlnLog(LoggerLevel.LL_DEBUG, "this.inn: //*" + this.inn + "*//");
 				
 				this.changeAndNotify(this.soc+" a envoyé : '"+this.inn+"'");
 				
@@ -92,20 +92,23 @@ public class DCTParsely extends DaemonGenericClientThread {
 		String toTreat				= null;
 		try {
 			JSONObject received		= new JSONObject(this.inn);
-			// TODO ...
 			toTreat					= received.get("query").toString();
 		} catch (JSONException e) {
-			e.printStackTrace();
+			Logger.printlnLog(LoggerLevel.LL_WARNING, e.getMessage());
+			Logger.printlnLog(LoggerLevel.LL_WARNING, this.inn);
+			// e.printStackTrace();
 		}
 		
 		JSONObject outputJSONobj	= new JSONObject();
+		
+		Logger.printlnLog(LoggerLevel.LL_DEBUG, "toTreat: {" + toTreat + "}");
 		
 		this.instance.nextStep(toTreat);
 		toReturn = this.instance.getContentToShow();
 		
 		outputJSONobj.put("toclient", toReturn);
 		
-		Logger.printlnLog(LoggerLevel.LL_INFO, "TO THE CLIENT: ///" + outputJSONobj.toJSON() + "///");
+		Logger.printlnLog(LoggerLevel.LL_DEBUG, "TO THE CLIENT: ///" + outputJSONobj.toJSON() + "///");
 		
 		return outputJSONobj;
 	}

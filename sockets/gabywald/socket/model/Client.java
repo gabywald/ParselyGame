@@ -42,7 +42,7 @@ public class Client extends Observable implements Runnable {
 	
 	private void changeAndNotify(JSONObject output) {
 		
-		Logger.printlnLog(LoggerLevel.LL_INFO, "CLIENT RECEIVE (2): ///" + output + "///");
+		Logger.printlnLog(LoggerLevel.LL_DEBUG, "CLIENT RECEIVE (2): ///" + output + "///");
 		
 		this.out = output;
 		this.setChanged();
@@ -51,12 +51,17 @@ public class Client extends Observable implements Runnable {
 	
 	private void changeAndNotify(String output) {
 		
-		Logger.printlnLog(LoggerLevel.LL_INFO, "CLIENT RECEIVE (1): ///" + output + "///");
+		Logger.printlnLog(LoggerLevel.LL_DEBUG, "CLIENT RECEIVE (1): ///" + output + "///");
+		String insider = output; 
 		
 		JSONObject tmpJSONobj;
 		try {
-			tmpJSONobj = new JSONObject( output );
+			tmpJSONobj = new JSONObject( insider );
 		} catch (JSONException e) {
+			
+			Logger.printlnLog(LoggerLevel.LL_ERROR, e.getMessage() + "\n" + insider);
+			// Logger.printlnLog(LoggerLevel.LL_ERROR, insider);
+			
 			tmpJSONobj = new JSONObject();
 			tmpJSONobj.put( "error", "Received JSON could not be interpreted !" );
 		}
@@ -71,7 +76,7 @@ public class Client extends Observable implements Runnable {
 	
 	public void input(String txt) {
 		this.inn.add(txt);
-		Logger.printlnLog(LoggerLevel.LL_INFO, txt + " => " + this.inn.peek());
+		Logger.printlnLog(LoggerLevel.LL_DEBUG, txt + " => " + this.inn.peek());
 	}
 	
 	public String getOutput() { 
@@ -125,7 +130,7 @@ public class Client extends Observable implements Runnable {
 			boolean exit			= false;
 			do {
 				
-				Logger.printlnLog(LoggerLevel.LL_INFO, this.inn.size() + "*");
+				Logger.printlnLog(LoggerLevel.LL_DEBUG, this.inn.size() + "*");
 				
 				while ( (this.inn == null) || (this.inn.size() == 0) ) 
 					{ ; }
@@ -133,7 +138,7 @@ public class Client extends Observable implements Runnable {
 					
 					String data = this.inn.poll();
 					
-					Logger.printlnLog(LoggerLevel.LL_INFO, "data: ---" + data + "---");
+					Logger.printlnLog(LoggerLevel.LL_DEBUG, "data: ---" + data + "---");
 					
 					sos.write(data.getBytes());
 					int available	= sis.available();

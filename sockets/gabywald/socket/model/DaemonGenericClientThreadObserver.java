@@ -13,6 +13,6 @@ public class DaemonGenericClientThreadObserver extends GenericObserver {
 	@Override
 	public void update(Observable observable, Object object) {
 		DaemonGenericClientThread dct = (DaemonGenericClientThread)observable;
-		Logger.printlnLog(LoggerLevel.LL_FORUSER, "SERVERSIDE:" + dct.getOutput());
+		Logger.printlnLog(LoggerLevel.LL_DEBUG, "SERVERSIDE:" + dct.getOutput());
 	}
 }

@@ -1,5 +1,8 @@
 package gabywald.socket.parsely.v2;
 
+import gabywald.utilities.logger.Logger;
+import gabywald.utilities.logger.Logger.LoggerLevel;
+
 public class ParselyGameStarter extends StateMachine<ParselyScenario> {
 
 	private static ParselyGameStarter instance;
@@ -27,6 +30,9 @@ public class ParselyGameStarter extends StateMachine<ParselyScenario> {
 	}
 	
 	public void nextStep(String command) {
+		
+		Logger.printlnLog(LoggerLevel.LL_INFO, "PGS.next: {" + command + "} (" + this.getState() + ")");
+		
 		switch(this.getState()) {
 		case(0):
 			try { 
@@ -51,20 +57,22 @@ public class ParselyGameStarter extends StateMachine<ParselyScenario> {
 	}
 	
 	public String getContentToShow() {
-		String toReturn = new String();
+		StringBuilder toReturn = new StringBuilder();
 		
 		switch(this.getState()) {
 		case(0): 
-			toReturn += "Welcome to Parsely Game, choose : \n";
-			toReturn += "\t 0- exit\n";
+			toReturn.append("Welcome to Parsely Game, choose : ").append("\\n");
+			toReturn.append("\\t 0- exit").append("\\n");
 			for (int i = 1 ; i < this.setOfScenarios.length+1 ; i++) 
-				{ toReturn += "\t " + (i) + "- '" + this.setOfScenarios[i-1].getName() + "'\n"; }
+				{ toReturn.append("\\t ").append(i).append("- '")
+					.append(this.setOfScenarios[i-1].getName()).append("'")
+					.append("\\n"); }
 			break;
 		case(1):
-			toReturn += this.getObject().getContentToShow();
+			toReturn.append(this.getObject().getContentToShow());
 		} /** END "switch(this.getState())" */
 		
-		return toReturn;
+		return toReturn.toString();
 	}
 	
 	
