@@ -140,7 +140,6 @@ public class DaemonClientThread extends Observable implements Runnable {
 		Logger.printlnLog(LoggerLevel.LL_DEBUG, "DaemonClientThread.treatment()...");
 		String toReturn				= "... treament ...";
 		JSONObject outputJSONobj	= new JSONObject();
-		// TODO in inheritant !
 		outputJSONobj.put("toclient", toReturn);
 		return outputJSONobj;
 	}

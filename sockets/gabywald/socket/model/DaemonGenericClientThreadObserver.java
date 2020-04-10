@@ -9,11 +9,10 @@ import java.util.Observable;
  * 
  * @author Gabriel Chandesris (2013, 2015, 2020)
  */
-public class ClientObserver extends GenericObserver {
+public class DaemonGenericClientThreadObserver extends GenericObserver {
 	@Override
 	public void update(Observable observable, Object object) {
-		Client client = (Client)observable;
-		Logger.printlnLog(LoggerLevel.LL_FORUSER, "CLIENTSIDE:" + client.getOutput());
-		Logger.printLog(LoggerLevel.LL_FORUSER, ">");
+		DaemonGenericClientThread dct = (DaemonGenericClientThread)observable;
+		Logger.printlnLog(LoggerLevel.LL_DEBUG, "SERVERSIDE:" + dct.getOutput());
 	}
 }
