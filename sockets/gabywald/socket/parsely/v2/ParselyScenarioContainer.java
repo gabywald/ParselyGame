@@ -34,7 +34,7 @@ public class ParselyScenarioContainer {
 					this.scenariiNames.add(currentFile);
 				}
 			}
-		} /** END "if (directory.isDirectory())" */
+		} // END "if (directory.isDirectory())" 
 	}
 	
 	public static ParselyScenarioContainer getInstance() {

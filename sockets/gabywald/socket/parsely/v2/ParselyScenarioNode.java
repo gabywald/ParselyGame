@@ -66,7 +66,7 @@ public class ParselyScenarioNode {
 		for (int i = 0 ; (i < this.objects.size()) && ( ! hasObject) ; i++) {
 			hasObject = this.objects.get(i).equals(object);
 			if (hasObject) { this.objects.remove(i); }
-		} /** END "for (int i = 0 ; (i < this.objects.size()) && ( ! hasObject) ; i++)" */
+		} // END "for (int i = 0 ; (i < this.objects.size()) && ( ! hasObject) ; i++)" 
 		return hasObject;
 	}
 	
@@ -76,7 +76,7 @@ public class ParselyScenarioNode {
 		for (int i = 0 ; (i < this.exits.size()) && ( ! toReturn) ; i++) {
 			String currentTest = this.exits.get(i).split("/")[0];
 			toReturn = currentTest.equals(exit);
-		} /** END "for (int i = 0 ; (i < this.exits.size()) && ( ! toReturn) ; i++)" */
+		} // END "for (int i = 0 ; (i < this.exits.size()) && ( ! toReturn) ; i++)" 
 		return toReturn;
 	}
 	
@@ -89,7 +89,7 @@ public class ParselyScenarioNode {
 			hasExit = currentTest.equals(exit);
 			if (hasExit) 
 				{ toReturn = Integer.parseInt(this.exits.get(i).split("/")[1]); }
-		} /** END "for (int i = 0 ; (i < this.exits.size()) && ( ! toReturn) ; i++)" */
+		} // END "for (int i = 0 ; (i < this.exits.size()) && ( ! toReturn) ; i++)" 
 		
 		return toReturn;
 	}
@@ -97,22 +97,22 @@ public class ParselyScenarioNode {
 	public String toString() {
 		String toReturn = new String();
 		
-		toReturn += "[" + this.name + "] " + this.description + "\n";
+		toReturn += "[" + this.name + "] " + this.description + ParselyGameStarter.STR_RETURN;
 		
-		if (this.objects.size() > 0) { toReturn += "\tThere is "; }
+		if (this.objects.size() > 0) { toReturn += ParselyGameStarter.STR_TABULATION + "There is "; }
 		for (int i = 0 ; i < this.objects.size() ; i++) 
 			{ toReturn += ((i > 0)?((i != this.objects.size()-1 )?", ":" and "):"")
 								+ this.objects.get(i); }
-		if (this.objects.size() > 0) { toReturn += ". \n"; }
+		if (this.objects.size() > 0) { toReturn += ". " + ParselyGameStarter.STR_RETURN; }
 		
 		if (this.exits.size() == 0) 
-			{ toReturn += "\tNo exit. \n"; }
+			{ toReturn += ParselyGameStarter.STR_TABULATION + "No exit. " + ParselyGameStarter.STR_RETURN; }
 		else {
-			toReturn += "\tExits are : ";
+			toReturn += ParselyGameStarter.STR_TABULATION + "Exits are : ";
 			for (int i = 0 ; i < this.exits.size() ; i++) 
 				{ toReturn += ((i > 0)?", ":"") + this.exits.get(i).split("/")[0]; }
-			toReturn += ". \n";
-		} /** END else of "if (this.exits.size() == 0)" */
+			toReturn += ". " + ParselyGameStarter.STR_RETURN;
+		} // END else of "if (this.exits.size() == 0)" 
 		
 		return toReturn;
 	}

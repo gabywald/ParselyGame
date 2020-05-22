@@ -7,6 +7,9 @@ public class ParselyGameStarter extends StateMachine<ParselyScenario> {
 
 	private static ParselyGameStarter instance;
 	
+	public static final String STR_RETURN		= "==return=="; // "\\n"
+	public static final String STR_TABULATION	= "==tabulation=="; // "\\t"
+	
 	private ParselyScenario[] setOfScenarios;
 	
 	private ParselyGameStarter() 
@@ -31,7 +34,7 @@ public class ParselyGameStarter extends StateMachine<ParselyScenario> {
 	
 	public void nextStep(String command) {
 		
-		Logger.printlnLog(LoggerLevel.LL_INFO, "PGS.next: {" + command + "} (" + this.getState() + ")");
+		Logger.printlnLog(LoggerLevel.LL_DEBUG, "PGS.next: {" + command + "} (" + this.getState() + ")");
 		
 		switch(this.getState()) {
 		case(0):
@@ -43,17 +46,18 @@ public class ParselyGameStarter extends StateMachine<ParselyScenario> {
 					default:
 						this.setState(1);
 						this.setObject(this.setOfScenarios[menuElt-1]);
-					} /** END "switch(menuElt)" */
-				} /** END "if ( (menuElt >= 0) && (menuElt <= setOfScenarios.length+1 ) )" */
-			} catch (NumberFormatException e) /* !! */ { ; } /* !! */
+					} // END "switch(menuElt)"
+				} // END "if ( (menuElt >= 0) && (menuElt <= setOfScenarios.length+1 ) )"
+			} catch (NumberFormatException e) // /* !! */ { ; } /* !! */
+				{ Logger.printlnLog(LoggerLevel.LL_INFO, "NaN {" + command + "}"); }
 			break;
 		case(1): 
 			this.getObject().nextStep(command);
-			/** Check if we quit ! */
+			// Check if we quit ! 
 			if (command.equals(ParselyScenario.BASIC_COMMANDS[2])) 
 				{ this.quitCurrentScenario(); }
 			break;
-		} /** END "switch(this.getState())" */
+		} // END "switch(this.getState())" 
 	}
 	
 	public String getContentToShow() {
@@ -61,16 +65,16 @@ public class ParselyGameStarter extends StateMachine<ParselyScenario> {
 		
 		switch(this.getState()) {
 		case(0): 
-			toReturn.append("Welcome to Parsely Game, choose : ").append("\\n");
-			toReturn.append("\\t 0- exit").append("\\n");
+			toReturn.append("Welcome to Parsely Game, choose : ").append( ParselyGameStarter.STR_RETURN );
+			toReturn.append( ParselyGameStarter.STR_TABULATION ).append("0- exit").append( ParselyGameStarter.STR_RETURN );
 			for (int i = 1 ; i < this.setOfScenarios.length+1 ; i++) 
-				{ toReturn.append("\\t ").append(i).append("- '")
+				{ toReturn.append( ParselyGameStarter.STR_TABULATION ).append(i).append("- '")
 					.append(this.setOfScenarios[i-1].getName()).append("'")
-					.append("\\n"); }
+					.append( ParselyGameStarter.STR_RETURN ); }
 			break;
 		case(1):
 			toReturn.append(this.getObject().getContentToShow());
-		} /** END "switch(this.getState())" */
+		} // END "switch(this.getState())" 
 		
 		return toReturn.toString();
 	}

@@ -13,6 +13,9 @@ import java.util.Observable;
  * @author Gabriel Chandesris (2013, 2015, 2020)
  */
 public class ClientParselyObserver extends GenericObserver {
+	
+	// TODO input / output via socket is not synchronized !!
+	
 	@Override
 	public void update(Observable observable, Object object) {
 		ClientParsely client = (ClientParsely)observable;
@@ -21,7 +24,7 @@ public class ClientParselyObserver extends GenericObserver {
 		String content2show	= null;
 		try {
 			jsonObj			= new JSONObject(client.getOutput());
-			content2show	= jsonObj.get("toclient").toString();
+			content2show	= jsonObj.get("toclient").getString();
 		} catch (JSONException e) {
 			Logger.printlnLog(LoggerLevel.LL_WARNING, e.getMessage() + "\n" + client.getOutput());
 			// e.printStackTrace();
@@ -30,13 +33,13 @@ public class ClientParselyObserver extends GenericObserver {
 		if (content2show == null) {
 			content2show = "No Message !";
 		} else {
-			Logger.printlnLog(LoggerLevel.LL_INFO, "*****" + content2show + "*****");
-			content2show = content2show.replaceAll("\\\\n", "\n")
-								.replaceAll("\\\\t", "\t");
-			Logger.printlnLog(LoggerLevel.LL_INFO, "*****" + content2show + "*****");
+			Logger.printlnLog(LoggerLevel.LL_DEBUG, "*****" + content2show + "*****");
+			content2show = content2show.replaceAll(ParselyGameStarter.STR_RETURN, "\n")
+										.replaceAll(ParselyGameStarter.STR_TABULATION, "\t");
+			Logger.printlnLog(LoggerLevel.LL_DEBUG, "*****" + content2show + "*****");
+			Logger.printlnLog(LoggerLevel.LL_FORUSER, content2show);
 		}
 		
-		Logger.printlnLog(LoggerLevel.LL_FORUSER, content2show);
 		Logger.printLog(LoggerLevel.LL_FORUSER, ">");
 	}
 }

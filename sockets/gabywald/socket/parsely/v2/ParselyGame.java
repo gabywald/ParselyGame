@@ -39,21 +39,10 @@ public class ParselyGame {
 	}
 	
 	public void execution() {
-//		ParselyGameStarter instance	= ParselyGameStarter.getInstance();
-//		String toShow				= instance.getContentToShow();
-//		Logger.printlnLog(LoggerLevel.LL_FORUSER, toShow);
 		
-		// boolean exit = false;
+		this.exit = this.sendInput( "start" );
+		
 		do {
-//			JSONObject jsonObj = new JSONObject();
-//			try {
-//				jsonObj = new JSONObject(this.client.getOutput());
-//			} catch (JSONException e) {
-//				e.printStackTrace();
-//			}
-//			Logger.printlnLog(LoggerLevel.LL_FORUSER, jsonObj.toString() + "*****");
-//			Logger.printLog(LoggerLevel.LL_FORUSER, ">"); // '\b'
-			
 			/** Read a line ! */
 			String readedLine				= null;
 			try {
@@ -63,17 +52,17 @@ public class ParselyGame {
 			} catch (IOException e) { readedLine = new String(""); }
 			
 			if (readedLine.equals("")) { ; }
-			else {
-				
-				JSONObject toSend = new JSONObject();
-				toSend.put("query", readedLine);
-				this.client.input(toSend.toString());
-				// TODO watch it is correctly passed
-				
-				// exit = (readedLine.equals("quit") || readedLine.equals("shutdown"));
-			}
+			else 
+				{ this.exit = this.sendInput(readedLine); }
 		} while( ! this.exit);
 		Logger.printlnLog(LoggerLevel.LL_FORUSER, "Good bye !");
+	}
+	
+	private boolean sendInput(String line) {
+		JSONObject toSend = new JSONObject();
+		toSend.put("query", line);
+		this.client.input(toSend.toString());
+		return (line.equals("quit") || line.equals("shutdown"));
 	}
 	
 }

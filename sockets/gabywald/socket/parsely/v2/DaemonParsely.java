@@ -21,7 +21,7 @@ public class DaemonParsely extends DaemonGeneric<DCTParsely> {
 				newDaemonClient.start(); // this.getLastClient().start();
 			} while(this.running);
 		} catch (IOException e) {
-			/** e.printStackTrace(); */
+			// e.printStackTrace();
 			this.out = new String("Transmission error (daemon:run) !");
 			this.running = false;
 		} finally {

@@ -25,7 +25,7 @@ public class DCTParsely extends DaemonGenericClientThread {
 		try {
 			String clientAddr	= this.soc.getInetAddress().getHostAddress();
 			
-			this.changeAndNotify("Connexion a partir de: "+clientAddr);
+			this.changeAndNotify("Connexion a partir de: " + clientAddr);
 			
 			InputStream cis		= this.soc.getInputStream();
 			OutputStream cos	= this.soc.getOutputStream();
@@ -61,12 +61,12 @@ public class DCTParsely extends DaemonGenericClientThread {
 				// ***** ***** ***** ***** ***** 
 				Logger.printlnLog(LoggerLevel.LL_DEBUG, "this.inn: //*" + this.inn + "*//");
 				
-				this.changeAndNotify(this.soc+" a envoyé : '"+this.inn+"'");
+				this.changeAndNotify(this.soc + " a envoyé : '" + this.inn + "'");
 				
 				Logger.printlnLog(LoggerLevel.LL_DEBUG, "\t init treatment...");
 				JSONObject toSendToClient = this.treatment();
 				Logger.printlnLog(LoggerLevel.LL_DEBUG, "\t end treatment...");
-				// toSendToClient.put("returning", "Bien reçu : ["+this.inn+"]");
+				toSendToClient.put("returning", "Bien reçu : [" + this.inn + "]");
 				cos.write(toSendToClient.toJSON().getBytes());
 				cos.flush();
 			} while ( (!"exit".equalsIgnoreCase(this.inn)) 
@@ -92,7 +92,7 @@ public class DCTParsely extends DaemonGenericClientThread {
 		String toTreat				= null;
 		try {
 			JSONObject received		= new JSONObject(this.inn);
-			toTreat					= received.get("query").toString();
+			toTreat					= received.get("query").getString();
 		} catch (JSONException e) {
 			Logger.printlnLog(LoggerLevel.LL_WARNING, e.getMessage());
 			Logger.printlnLog(LoggerLevel.LL_WARNING, this.inn);

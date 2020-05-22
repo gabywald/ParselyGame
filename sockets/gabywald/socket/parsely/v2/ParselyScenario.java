@@ -98,9 +98,9 @@ public class ParselyScenario extends StateMachine<ParselyScenarioNode> {
 						if (this.locations.containsKey(split[1]))
 							{ this.locations.get(split[1]).setWinningMessage(split[2]); }
 					}
-				} /** END "if (split.length > 1)" */
-			} /** END "for (int i = 0 ; i < table.length ; i++)" */
-		} /** END "if (!table[0].matches("ERROR"))" */
+				} // END "if (split.length > 1)" 
+			} // END "for (int i = 0 ; i < table.length ; i++)" 
+		} // END "if (!table[0].matches("ERROR"))" 
 		
 		this.setState(0);
 	}
@@ -109,18 +109,18 @@ public class ParselyScenario extends StateMachine<ParselyScenarioNode> {
 //		switch(this.getState()) {
 //		case(0):
 //			break;
-//		} /** END "switch(this.getState())" */
+//		} // END "switch(this.getState())" 
 		
-		/** 'help' */
+		// 'help' 
 		if (command.equals(ParselyScenario.BASIC_COMMANDS[0])) 
 			{ this.setTemporaryState(-1); }
-		else /** 'inventory' */
+		else // 'inventory' 
 		if (command.equals(ParselyScenario.BASIC_COMMANDS[1])) 
 			{ this.setTemporaryState(-2); }
-		else /** 'quit' */
+		else // 'quit' 
 			if (command.equals(ParselyScenario.BASIC_COMMANDS[2])) 
 				{ this.reloadScenario(); }
-		else /** 'go||walk' */
+		else // 'go||walk' 
 			if ( (command.startsWith(ParselyScenario.BASIC_COMMANDS[3]))
 					|| (command.startsWith(ParselyScenario.BASIC_COMMANDS[4])) ) { 
 				String[] going = command.split(" ");
@@ -135,32 +135,28 @@ public class ParselyScenario extends StateMachine<ParselyScenarioNode> {
 					} else { this.reloadScenario(); }
 				} else { this.caseOfUnknownSituation(command); }
 			}
-		else /** 'get||take' */
+		else // 'get||take' 
 			if ( (command.startsWith(ParselyScenario.BASIC_COMMANDS[5]))
 					|| (command.startsWith(ParselyScenario.BASIC_COMMANDS[6])) ) { 
-				// Logger.printlnLog(LoggerLevel.LL_INFO, "get||take");
 				String[] geting = command.split(" ");
 				if ( (geting.length > 1) 
 						&& ( (geting[0].equals(ParselyScenario.BASIC_COMMANDS[5]))
 								|| (geting[0].startsWith(ParselyScenario.BASIC_COMMANDS[6])) ) ) {
-					// Logger.printlnLog(LoggerLevel.LL_INFO, "\t " + geting[0]);
-					// Logger.printlnLog(LoggerLevel.LL_INFO, "\t " + geting[1]);
 					String objectToTake = geting[1];
 					ParselyScenarioNode currentNode = this.locations.get(this.getState() + "");
 					if (currentNode != null) { 
 						if (currentNode.takingObject(objectToTake)) {
 							this.inventory.add(objectToTake);
-							this.previousData = "\t[" + objectToTake + "] added to your inventory. \n";
+							this.previousData = ParselyGameStarter.STR_TABULATION + "[" + objectToTake + "] added to your inventory. " + ParselyGameStarter.STR_RETURN;
 							this.setTemporaryState(-4);
-						} /** END "if (currentNode.takingObject(objectToTake))" */
+						} // END "if (currentNode.takingObject(objectToTake))" 
 						else { this.caseOfUnknownSituation(command); }
 					} else { this.reloadScenario(); }
 				} else { this.caseOfUnknownSituation(command); }
 			}
-		else /** 'where' */
+		else // 'where' 
 			if (command.equals(ParselyScenario.BASIC_COMMANDS[7])) 
 				{ /** Just turning around... */; }
-		
 		
 		else { this.caseOfUnknownSituation(command); }
 	}
@@ -169,49 +165,49 @@ public class ParselyScenario extends StateMachine<ParselyScenarioNode> {
 		String toReturn = new String();
 		
 		switch(this.getState()) {
-		case(-1): /** 'help' */
+		case(-1): // 'help' 
 			toReturn += this.listOfAvailableCommands();
 		this.comeBack();
 			break;
-		case(-2): /** 'inventory' */
-			toReturn += "Content of inventory : \n\t";
+		case(-2): // 'inventory' 
+			toReturn += "Content of inventory : " + ParselyGameStarter.STR_RETURN + ParselyGameStarter.STR_TABULATION;
 			if (this.inventory.size() == 0) 
-				{ toReturn += "<nothing>. \n"; }
+				{ toReturn += "<nothing>. " + ParselyGameStarter.STR_RETURN ; }
 			else {
 				for (int i = 0 ; i < this.inventory.size(); i++) 
 					{ toReturn += ((i > 0)?" ; ":"") + this.inventory.get(i); }
-				toReturn += ". \n";
-			} /** END else of "if (this.inventory.size() == 0)" */
+				toReturn += ". " + ParselyGameStarter.STR_RETURN ;
+			} // END else of "if (this.inventory.size() == 0)" 
 			this.comeBack();
 			break;
-		case(-3): /** unknown situation */
-			toReturn += this.getAsillyResponse() + "\n";
+		case(-3): // Unknown situation 
+			toReturn += this.getAsillyResponse()  + ParselyGameStarter.STR_RETURN ;
 			this.comeBack();
 			break;
-		case(-4): /** getting / taking some object... */
-			toReturn += this.previousData + "\n";
+		case(-4): // Getting / taking some object... 
+			toReturn += this.previousData  + ParselyGameStarter.STR_RETURN ;
 			this.comeBack();
 			break;
-		default: /** 0 and + : ParselyScenarioNodes... */
+		default: // 0 and + : ParselyScenarioNodes... 
 			if ( ! this.hasStarted) {
-				toReturn += "Scenario \"" + this.name + "\"\n";
+				toReturn += "Scenario \"" + this.name + "\"" + ParselyGameStarter.STR_RETURN;
 				if (this.commands.size() > 0) 
 					{ toReturn += this.listOfAvailableCommands(); }
-				toReturn += this.intro + "\n";
+				toReturn += this.intro + ParselyGameStarter.STR_RETURN;
 				this.hasStarted = true;
-			} /** END "if ( ! this.hasStarted)" */
+			} // END "if ( ! this.hasStarted)" 
 			ParselyScenarioNode currentNode = this.locations.get(this.getState() + "");
 			if (currentNode != null) { 
 				toReturn += currentNode.toString();
 				if (currentNode.isAtEnd(this.inventory)) { 
-					toReturn += currentNode.getWinningMessage() + "\n";
+					toReturn += currentNode.getWinningMessage() + ParselyGameStarter.STR_RETURN;
 					ParselyGameStarter.getInstance().quitCurrentScenario();
 					toReturn += ParselyGameStarter.getInstance().getContentToShow();
 					this.reloadScenario();
-				} /** END "if (currentNode.isAtEnd(this.inventory))" */
+				} // END "if (currentNode.isAtEnd(this.inventory))" 
 			} else { this.reloadScenario(); toReturn += " !! Scenario Reloading... !! "; }
 			break;
-		} /** END "switch(this.getState())" */
+		} // END "switch(this.getState())"
 				
 		return toReturn;
 	}
@@ -232,10 +228,10 @@ public class ParselyScenario extends StateMachine<ParselyScenarioNode> {
 	
 	private String listOfAvailableCommands() {
 		String toReturn = new String();
-		toReturn += "List of available commands : \n\t";
+		toReturn += "List of available commands : " + ParselyGameStarter.STR_RETURN  + ParselyGameStarter.STR_TABULATION;
 		for (int i = 0 ; i < this.commands.size(); i++) 
 			{ toReturn += ((i > 0)?" ; ":"") + this.commands.get(i); }
-		toReturn += ". \n";
+		toReturn += ". " + ParselyGameStarter.STR_RETURN;
 		return toReturn;
 	}
 	
